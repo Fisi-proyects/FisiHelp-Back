@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { comparePassword, hashPassword } from "../utils/utils";
+import { error } from "node:console";
 
 const prisma = new PrismaClient();
 
@@ -37,19 +38,19 @@ export async function getStudentByEmail(email: string) {
     })
 }
 
-export async function setPassword(dni: string, password: string) {
+export async function setPassword(codigo: number, password: string) {
     try {
         const hashedPassword = await hashPassword(password);
         return await prisma.alumno.update({
             where: {
-                DNI: dni
+                codigo: codigo
             },
             data: {
                 password: hashedPassword
             }
         });
     } catch (error) {
-        console.error(`Error updating student with DNI ${dni}:`, error);
+        console.error(`Error updating student with codigo ${codigo}:`, error);
         throw error;
     }
 }
@@ -59,9 +60,15 @@ export async function login(email:string, password: string){
     const student = await getStudentByEmail(email).then((value) => {
         
         if(value != null){
+            
+            if(value.password == ""){
+                return new error("Falta validar su correo");
+
+            }
+            
             const dato = comparePassword(password, value.password);
             if(dato){
-                return student;
+                return {alumno:student, message: "Bienvenido"};
             }
             else{
                 return {error: "Contraseña incorrecta"};

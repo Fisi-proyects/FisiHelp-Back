@@ -1,17 +1,4 @@
-import { Resend } from "resend";
-
-
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-export async function sendEmail(email: string, nombre: string, codigo: number) {
-    try{
-        const data =await resend.emails.send({
-            from: "admin@vizcacha.lol",
-            to: [email],
-            subject: 'Correo de verificacion',
-            html: `
-
-            <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -21,9 +8,9 @@ export async function sendEmail(email: string, nombre: string, codigo: number) {
 </head>
 <body>
     <h1>Gracias por verificar tu correo con nosotros</h1>
-    <h3>Hola ${nombre}, haz click al siguiente enlace para verificar tu correo</h3>
+    <h3>Hola nombre, haz click al siguiente enlace para verificar tu correo</h3>
     <img src="https://hackathonvirtual.softaki.com/fisi.png" alt="">
-    <a href="http://localhost:3000/alumnos/verify/${codigo}" target="_blank">Verificar Correo</a>
+    <a href="http://localhost:3000/verify" target="_blank">Verificar Correo</a>
 </body>
 <style>
     body{
@@ -55,15 +42,9 @@ export async function sendEmail(email: string, nombre: string, codigo: number) {
         
     }
 </style>
+<script>
+    //guardar codigo en una cookie
+    window.localStorage.setItem("Valitation cookie", JSON.stringify({codigo: 1234}));
+    //alert("Hello World");
+</script>
 </html>
-
-            `
-        })
-        console.log(data);
-        console.log("Sending email..."); 
-    }
-    catch(error){
-        console.error(`Error sending email:`, error);
-        throw error;
-    }
-}
