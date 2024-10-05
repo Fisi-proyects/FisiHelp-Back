@@ -15,7 +15,7 @@ declare global {
         }[];
       };
       isAdmin?: boolean;
-      isDoctor?: boolean;
+      isUser?: boolean;
     }
   }
 }

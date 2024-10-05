@@ -76,10 +76,11 @@ const userResponseSchema = z.object({
   ),
 });
 
+/*
 router.get(
   "/profile",
   authWithUserMiddleware,
-  (req, res) => res.send(req.user),
+  (req,res) => res.send(req.user),
   docs({
     description: `Recibe un token a través de un header de autentiación, y devuelve el usuario asociado a él.
 
@@ -91,5 +92,6 @@ El token se envía a través del header \`Authorization: Bearer <token>\``,
     },
   }),
 );
+*/
 
 export { router };
