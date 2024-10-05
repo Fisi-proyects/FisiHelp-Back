@@ -1,33 +1,91 @@
-generator client {
-  provider = "prisma-client-js"
-}
+    // This is your Prisma schema file,
+    // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
-}
+    // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+    // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
-model User {
-  id              Int    @id @default(autoincrement())
-  email           String @unique
-  hashed_password String
-  names           String
-  surnames        String
+    generator client {
+      provider = "prisma-client-js"
+    }
 
-  Admin  Admin?
-  roles  UserRole[]
-}
+    datasource db {
+      provider = "postgresql"
+      url      = env("DATABASE_URL")
+    }
 
-model UserRole {
-  id   Int    @id @default(autoincrement())
-  name String @unique
+    model Alumno {
+      id           Int    @id @default(autoincrement()) 
+      codigo       Int    @unique 
+      nombre       String
+      apellido_pat String
+      apellido_mat String
+      email        String
+      DNI          String    @unique
+      ponderado    Float   @default(0)
+      observado    Boolean @default(false)
+      password     String  @default("")
+      reserva      reserva[]
+      reserva_unayoe reserva_unayoe[]
+    }
 
-  users User[]
-}
+    model Curso {
+      id              Int @id @default(autoincrement())
+      codigo          String @unique
+      creditos        Int
+      cupos           Int
+      matriculados    Int
+      aprobados       Int
+      desaprobados    Int
+      id_salon        Int
+      prerequisito    String
+      curso_posterior String
+    }
 
-model Admin {
-  id_user Int @unique
+    model espacio_servicio {
+      id        Int    @id @default(autoincrement())
+      nombre    String
+      capacidad Int
+      aparato   aparato[]
+      reserva   reserva[]
+    }
 
-  user User @relation(fields: [id_user], references: [id])
-}
+    model reserva {
+      id                  Int    @id @default(autoincrement())
+      id_espacio_servicio Int
+      id_alumno           Int
+      hora_inicio         DateTime
+      hora_fin            DateTime
+      estado              String
+      descripcion         String
+      alumno              Alumno           @relation(fields: [id_alumno], references: [id])
+      espacio_servicio    espacio_servicio @relation(fields: [id_espacio_servicio], references: [id])
+    }
+
+    model aparato {
+      id                  Int           @id @default(autoincrement())
+      nombre              String
+      descripcion         String
+      id_espacio_servicio Int
+      espacio_servicio    espacio_servicio @relation(fields: [id_espacio_servicio], references: [id])
+    }
+
+    model worker{
+      id        Int @id @default(autoincrement())
+      nombre    String
+      apellido  String
+      email     String
+      DNI       String @unique
+      password  String
+      cargo      String
+    }
+
+    model reserva_unayoe {
+      id          Int   @id @default(autoincrement())
+      id_alumno   Int
+      hora_inicio DateTime
+      hora_fin    DateTime
+      descripcion String
+      alumno      Alumno   @relation(fields: [id_alumno], references: [id])
+
+      @@index([id_alumno], name: "idx_id_alumno")
+    }

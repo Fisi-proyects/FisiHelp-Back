@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 import { userLoginSchema } from "../schemas/user.schema";
-import { sha256 } from "../utils";
+import { sha256 } from "../utils/utils";
 import { Router } from "express";
-import { prisma } from "../db";
+import { prisma } from "../utils/db";
 import { authWithUserMiddleware } from "../middlewares/auth";
 import { docs } from "../docs/middleware";
 import { z } from "zod";

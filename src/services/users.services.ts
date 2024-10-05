@@ -1,11 +1,11 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { prisma } from "../db";
+import { prisma } from "../utils/db";
 import {
   createUserSchema,
   idSchema,
   updateUserSchema,
 } from "../schemas/user.schema";
-import { sha256 } from "../utils";
+import { sha256 } from "../utils/utils";
 
 export class UsersService {
   constructor() {}
