@@ -13,3 +13,6 @@ jspm_packages/
 dist
 
 .npm
+
+Pruebas/node_modules
+Pruebas/.env
