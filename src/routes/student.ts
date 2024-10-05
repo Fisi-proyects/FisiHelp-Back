@@ -1,5 +1,6 @@
 import express from 'express'
 import { getStudentByDni, getStudents } from '../services/student.auth'
+import { sendEmail } from '../services/email'
 
 const router = express.Router()
 
@@ -31,16 +32,17 @@ router.post('/auth', (req, res) => {
       message: "Alumno encontrado, Se le enviara un correo de verificacion"
     }
     //envio del correo
+    sendEmail(student.email, student.nombre, student.codigo)
     res.status(200).json(response)
   }).catch(err =>{
     res.status(400).send(err)
   })
 })
 
-
-
-
-
+router.post('/login', (req, res) => {
+  const {email, password} = req.body
+  
+})
 /* router.get("/auth/:dni", (req, res) => {
   const dni = req.params.dni
   const student = getStudentByDni(dni)
