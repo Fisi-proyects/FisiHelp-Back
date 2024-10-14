@@ -11,8 +11,8 @@ router.get("/open-sections", async (req: Request, res: Response) => {
   try {
     const courses = await prisma.curso.findMany({
       where: {
-        aprobados: {
-          gte: minStudents 
+          aprobados: {
+            gte: minStudents 
         }
       },
       select: {
@@ -84,7 +84,6 @@ router.get("/courses", async (req: Request, res: Response) => {
           matriculados: true,
           aprobados: true,
           desaprobados: true,
-          nro_salon: true,
           prerequisito: true,
           curso_posterior: true,
         },

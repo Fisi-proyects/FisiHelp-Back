@@ -36,9 +36,8 @@ model Curso {
   matriculados    Int
   aprobados       Int
   desaprobados    Int
-  nro_salon       Int
-  prerequisito    String
-  curso_posterior String
+  prerequisito    String?
+  curso_posterior String?
 }
 
 model seccion {
