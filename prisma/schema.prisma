@@ -61,10 +61,11 @@ model rectificacion {
   justificacion  String
   id_curso_entra Int
   id_curso_sale  Int
+  fecha_hora     DateTime
   alumno         Alumno  @relation(fields: [id_alumno], references: [id])
   seccion_entra  seccion @relation(name: "entra", fields: [id_curso_entra], references: [id])
   seccion_sale   seccion @relation(name: "sale", fields: [id_curso_sale], references: [id])
-  
+
 }
 
 model matricula {
