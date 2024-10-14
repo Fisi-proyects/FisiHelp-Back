@@ -1,91 +1,115 @@
-    // This is your Prisma schema file,
-    // learn more about it in the docs: https://pris.ly/d/prisma-schema
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-    // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-    // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
-    generator client {
-      provider = "prisma-client-js"
-    }
+generator client {
+  provider = "prisma-client-js"
+}
 
-    datasource db {
-      provider = "postgresql"
-      url      = env("DATABASE_URL")
-    }
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 
-    model Alumno {
-      id           Int    @id @default(autoincrement()) 
-      codigo       Int    @unique 
-      nombre       String
-      apellido_pat String
-      apellido_mat String
-      email        String
-      DNI          String    @unique
-      ponderado    Float   @default(0)
-      observado    Boolean @default(false)
-      password     String  @default("")
-      reserva      reserva[]
-      reserva_unayoe reserva_unayoe[]
-    }
+model Alumno {
+  id            Int             @id @default(autoincrement())
+  codigo        Int             @unique
+  nombre        String
+  apellido_pat  String
+  apellido_mat  String
+  email         String
+  DNI           String          @unique
+  ponderado     Float           @default(0)
+  observado     Boolean         @default(false)
+  password      String          @default("")
+  reserva       reserva[]
+  rectificacion rectificacion[]
+}
 
-    model Curso {
-      id              Int @id @default(autoincrement())
-      codigo          String @unique
-      creditos        Int
-      cupos           Int
-      matriculados    Int
-      aprobados       Int
-      desaprobados    Int
-      id_salon        Int
-      prerequisito    String
-      curso_posterior String
-    }
+model Curso {
+  id              Int    @id @default(autoincrement())
+  codigo          String @unique
+  creditos        Int
+  cupos           Int
+  matriculados    Int
+  aprobados       Int
+  desaprobados    Int
+  nro_salon       Int
+  prerequisito    String
+  curso_posterior String
+}
 
-    model espacio_servicio {
-      id        Int    @id @default(autoincrement())
-      nombre    String
-      capacidad Int
-      aparato   aparato[]
-      reserva   reserva[]
-    }
+model seccion {
+  id            Int             @id @default(autoincrement())
+  id_curso      Int
+  nro_seccion   Int
+  profesor      String
+  capacidad     Int
+  aprobados     Int
+  desaprobados  Int
+  retirados     Int
+  rectificaciones_entra rectificacion[] @relation(name: "entra")
+  retificaciones_sale  rectificacion[] @relation(name: "sale")
+}
 
-    model reserva {
-      id                  Int    @id @default(autoincrement())
-      id_espacio_servicio Int
-      id_alumno           Int
-      hora_inicio         DateTime
-      hora_fin            DateTime
-      estado              String
-      descripcion         String
-      alumno              Alumno           @relation(fields: [id_alumno], references: [id])
-      espacio_servicio    espacio_servicio @relation(fields: [id_espacio_servicio], references: [id])
-    }
+model rectificacion {
+  id             Int     @id @default(autoincrement())
+  id_alumno      Int
+  nro_mat        Int     @unique
+  estado         String
+  justificacion  String
+  id_curso_entra Int
+  id_curso_sale  Int
+  alumno         Alumno  @relation(fields: [id_alumno], references: [id])
+  seccion_entra  seccion @relation(name: "entra", fields: [id_curso_entra], references: [id])
+  seccion_sale   seccion @relation(name: "sale", fields: [id_curso_sale], references: [id])
+  
+}
 
-    model aparato {
-      id                  Int           @id @default(autoincrement())
-      nombre              String
-      descripcion         String
-      id_espacio_servicio Int
-      espacio_servicio    espacio_servicio @relation(fields: [id_espacio_servicio], references: [id])
-    }
+model matricula {
+  id             Int    @id @default(autoincrement())
+  id_alumno      Int
+  id_seccion     Int
+  total_creditos Int
+  estado         String
+}
 
-    model worker{
-      id        Int @id @default(autoincrement())
-      nombre    String
-      apellido  String
-      email     String
-      DNI       String @unique
-      password  String
-      cargo      String
-    }
+model espacio_servicio {
+  id        Int       @id @default(autoincrement())
+  nombre    String
+  capacidad Int
+  aparato   aparato[]
+  reserva   reserva[]
+}
 
-    model reserva_unayoe {
-      id          Int   @id @default(autoincrement())
-      id_alumno   Int
-      hora_inicio DateTime
-      hora_fin    DateTime
-      descripcion String
-      alumno      Alumno   @relation(fields: [id_alumno], references: [id])
+model reserva {
+  id                  Int              @id @default(autoincrement())
+  id_espacio_servicio Int
+  id_alumno           Int
+  hora_inicio         DateTime
+  hora_fin            DateTime
+  estado              String
+  descripcion         String
+  alumno              Alumno           @relation(fields: [id_alumno], references: [id])
+  espacio_servicio    espacio_servicio @relation(fields: [id_espacio_servicio], references: [id])
+}
 
-      @@index([id_alumno], name: "idx_id_alumno")
-    }
+model aparato {
+  id                  Int              @id @default(autoincrement())
+  nombre              String
+  descripcion         String
+  id_espacio_servicio Int
+  espacio_servicio    espacio_servicio @relation(fields: [id_espacio_servicio], references: [id])
+}
+
+model worker {
+  id       Int    @id @default(autoincrement())
+  nombre   String
+  apellido String
+  email    String
+  DNI      String @unique
+  password String
+  cargo    String
+}
